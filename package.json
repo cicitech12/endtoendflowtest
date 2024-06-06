@@ -1,0 +1,29 @@
+{
+  "name": "e2e_dev",
+  "version": "1.0.0",
+  "readme": "Nightwatch Integration with BrowserStack an Local",
+  "description": "Automate Tricentis Vehicle Insurance App",
+  "scripts": {
+    "test": "npm run single && npm run local && npm run parallel && sample-test && npm run test-safari",
+    "single": "nightwatch --config nightwatch.conf.cloud.js --env browserstack",
+    "local": "nightwatch --config nightwatch.conf.js --test tests/test_full_flow_win.js",
+    "parallel": "nightwatch --config nightwatch.conf.cloud.js  --env browserstack.chrome,browserstack.edge,browserstack.firefox --test tests/test_full_flow_win.js && --config nightwatch.conf.cloud.js --env browserstack.safari --test tests/test_full_flow_macos.js",
+    "sample-test": "nightwatch --config nightwatch.conf.cloud.js --env env0,env1,env2 --test tests/test_full_flow.js && nightwatch --config nightwatch.conf.cloud.js --env env3 --test tests/test_full_flow_macos.js",
+    "test-safari": "nightwatch --config nightwatch.conf.cloud.js --env env3 --test tests/test_full_flow_macos.js",
+    "test-courtesy": "npm run test-courtesy-yes & npm run test-courtesy-no",
+    "test-courtesy-yes": "cross-env COURTESYCAR=Yes nightwatch --config nightwatch.conf.cloud.js --env envYes --test tests/test_full_flow_win.js",
+    "test-courtesy-no": "cross-env COURTESYCAR=No nightwatch --config nightwatch.conf.cloud.js --env envNo --test tests/test_full_flow_win.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cicitech12/endtoendflowtest.git"
+  },
+  "devDependencies": {
+    "@nightwatch/browserstack": "^0.1.3",
+    "chromedriver": "^125.0.3",
+    "cross-env": "^7.0.3",
+    "nightwatch": "^3.6.3"
+  },
+  "author": "CiCi",
+  "license": "MIT"
+}

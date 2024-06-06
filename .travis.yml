@@ -1,0 +1,57 @@
+
+# Travis CI configuration file
+
+language: node_js                            # Language used in the project
+
+node_js:
+  - "node"                                   # Version of Node.js used in the project
+
+os: linux                                    # Operating system used in the project
+
+dist: focal                                  # Ubuntu version used in the project
+
+addons:
+  chrome: stable                            # Chrome browser version used in the project
+  browserstack:
+    username: "BROWSERSTACK_USERNAME"       # Browser stack username 
+    access_key: "BROWSERSTACK_ACCESS_KEY"   # BrowserStack access key 
+
+# Cache the Node.js modules and packages
+cache:
+  directories:
+  - node_modules                            # Cache directory for Node.js modules
+  - "$HOME/.npm"                            # keep the npm cache around to speed up installs
+
+# Set the environment variables
+before_install: 
+  - export CHROME_BIN=google-chrome         # Set the path to the Chrome binary
+  - export DISPLAY=:99.0                    # Set the display number  for the Xvfb server
+  - Xvfb :99 &                              # Start the Xvfb server
+
+# Install the project dependencies
+install:
+  - npm ci                                  # Install the project dependencies                                   
+
+
+script:
+  - npm run local                           # Run the Nightwatch test script locally
+  #- npm run single                          # Run the Nightwatch test script on BrowserStack single instance
+  - npm run sample-test                     # Run the Nightwatch test script on BrowserStack with sample tests
+  #- npm run parallel                        # Run the Nightwatch test script parallel 
+  #- npm run test-safari
+
+# Check if the report is generated
+after_script:
+  - ls -alh tests_output/nightwatch-html-report
+
+# Deploy to GitHub Pages
+deploy:
+  provider: pages
+  strategy: git
+  skip_cleanup: true
+  token: $GITHUB_TOKEN  # Set in the Travis CI settings page or encrypted in the .travis.yml file
+  keep_history: true
+  local_dir: tests_output/nightwatch-html-report
+  on:
+    branch: main
+ 
